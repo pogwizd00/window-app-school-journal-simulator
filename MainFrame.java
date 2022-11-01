@@ -4,10 +4,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +61,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setVisible(true);
+
 
 
 
@@ -242,6 +240,42 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         });
     }
 
+    public void countByTypeOfCondtition(JTable TableOfStudents){
+        countByConditionButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PanelOfCountingCondition.setVisible(true);
+                countButton.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(!whichTypeField.getText().equals("")) {
+                            String whichType = whichTypeField.getText();
+                            DefaultTableModel modelTable = (DefaultTableModel) TableOfStudents.getModel();
+                            int sum=0;
+                            for(int i=0;i<TableOfStudents.getRowCount();i++){
+                                if(modelTable.getValueAt(i,2).toString().equals(whichType)){
+                                    sum++;
+                                }
+                            }
+                            ResultOfCountigByType.setText(Integer.toString(sum));
+                            //TODO has to add in every panel: after click table functionality has to have visible on false mode
+                            TableOfStudents.addMouseListener(new MouseAdapter() {
+                                @Override
+                                public void mouseClicked(MouseEvent e) {
+                                    super.mouseClicked(e);
+                                    ResultOfCountigByType.setText("");
+                                    whichTypeField.setText("");
+                                    PanelOfCountingCondition.setVisible(false);
+                                }
+                            });
+                        }else{
+                            JOptionPane.showMessageDialog(null,"You have to choose type to search");
+                        }
+                    }
+                });
+            }
+        });
+    }
 
     private void createClassesTable(){
         Object[][]datev1 ={
@@ -279,6 +313,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         changeInfoAboutStudent(TableOfStudents);
         addPointsToStudents(TableOfStudents);
         removePointsToStudents(TableOfStudents);
+        countByTypeOfCondtition(TableOfStudents);
 
         //Sort By Name And Points
 
