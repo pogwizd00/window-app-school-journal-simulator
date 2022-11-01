@@ -62,7 +62,7 @@
             </constraints>
             <properties>
               <margin top="2" left="6" bottom="2" right="6"/>
-              <text value="give me name"/>
+              <text value=""/>
             </properties>
           </component>
           <hspacer id="c96c6">
