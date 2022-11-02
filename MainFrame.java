@@ -5,14 +5,12 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 public class MainFrame extends JFrame { // when you extens from Jframe you can use methods that class
     private JPanel MainPanel;
     private JTable TableOfClasses;
     private JTextField SearchField;
-    private JButton SearchButton;
     private JTable TableOfStudents;
     private JButton addStudentButton;
     private JButton removeStudentButton;
@@ -44,6 +42,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
     private JButton countButton;
     private JLabel ResultOfCountigByType;
     private JPanel PanelOfCountingCondition;
+    private JButton searchButtonByName;
 
 
     public MainFrame(){
@@ -52,6 +51,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         PanelToAddPoints.setVisible(false);
         PanelRemovePoints.setVisible(false);
         PanelOfCountingCondition.setVisible(false);
+
         createClassesTable();
 //        createStudentsTablev2();
         listenerCLickOnClassTable();
@@ -61,7 +61,6 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setVisible(true);
-
 
 
 
@@ -98,6 +97,8 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                 }else if(TableOfStudents.getRowCount()==0) {
                     JOptionPane.showMessageDialog(null,"There is no more student to remove");
                 }
+//                tableModel.fireTableDataChanged();
+                TableOfStudents.repaint();
             }
         });
 
@@ -126,6 +127,8 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                             studentConditionField.setText("");
                             dateOfBirthField.setText("");
                             pointsField.setText("");
+                            TableOfStudents.repaint();
+//                            modelTabel.fireTableDataChanged();
                         }
                         PanelAddingStudent.setVisible(false);
                     }
@@ -143,6 +146,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                     public void mouseClicked(MouseEvent e) {
                         super.mouseClicked(e);
                         DefaultTableModel modelTable = (DefaultTableModel) TableOfStudents.getModel();
+
                         String name = modelTable.getValueAt(TableOfStudends.getSelectedRow(),0).toString();
                         String lastName = modelTable.getValueAt(TableOfStudends.getSelectedRow(),1).toString();
                         String studentCondition = modelTable.getValueAt(TableOfStudends.getSelectedRow(),2).toString();
@@ -167,7 +171,8 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                                     tableModel.setValueAt(studentCondtiionUpdate.getText(), TableOfStudends.getSelectedRow(), 2);
                                     tableModel.setValueAt(dateOfBirthUpdate.getText(), TableOfStudends.getSelectedRow(), 3);
                                     tableModel.setValueAt(pointsUpdate.getText(), TableOfStudends.getSelectedRow(), 4);
-                                    JOptionPane.showMessageDialog(null,"Info about student was updated !!");
+//                                    tableModel.fireTableDataChanged();
+                                    TableOfStudents.repaint();
                                 }
                                 PanelUpdatingStudent.setVisible(false);
                             }
@@ -199,6 +204,8 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                                     JOptionPane.showMessageDialog(null,"Points were changed !!");
                                 }
                                 howManyPoints.setText("");
+//                                modelTabelv2.fireTableDataChanged();
+                                TableOfStudents.repaint();
                                 PanelToAddPoints.setVisible(false);
                             }
                         });
@@ -230,7 +237,9 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                                 modelTableToRemove.setValueAt(allPoints,TableOfStudents.getSelectedRow(),4);
                                 JOptionPane.showMessageDialog(null,"Points were removed ");
                                 howManyRemove.setText("");
-                                PanelRemovePoints.setVisible(false); // it can be wrong
+//                                modelTableToRemove.fireTableDataChanged();
+                                TableOfStudents.repaint();
+                                PanelRemovePoints.setVisible(false);
                             }
                         });
 
@@ -276,7 +285,28 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             }
         });
     }
+    public void searchByPartial(JTable TableOfStudents, DefaultTableModel model){
 
+        final TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<DefaultTableModel>(model);
+        TableOfStudents.setRowSorter(sorter);
+        searchButtonByName.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String searchValue = SearchField.getText();
+                if(searchValue.length()==0){
+                    sorter.setRowFilter(null);
+                }else{
+                    try{
+                        sorter.setRowFilter(RowFilter.regexFilter(searchValue));
+                    }catch (PatternSyntaxException pse){
+                        System.out.println("Bad regex pattern");
+                    }
+                }
+            }
+        });
+//       sorter = new TableRowSorter<DefaultTableModel>(tableModel);
+
+    }
     private void createClassesTable(){
         Object[][]datev1 ={
                 {"Klasa 1A",32},
@@ -298,6 +328,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             DefaultTableModel modelStudent = new DefaultTableModel(date1,new String[]{"Name","LastName","Student Condition","Date Of Birth","Points"});
             TableOfStudents.setModel(modelStudent);
             removeStudent(TableOfStudents);
+            searchByPartial(TableOfStudents,modelStudent);
 
         } else if (whichClass=="Klasa 2B") {
             Object[][]date1={
@@ -307,40 +338,26 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             DefaultTableModel modelStudent = new DefaultTableModel(date1,new String[]{"Name","LastName","Student Condition","Date Of Birth","Points"});
             TableOfStudents.setModel(modelStudent);
             removeStudent(TableOfStudents);
+            searchByPartial(TableOfStudents,modelStudent);
         }
+        //Sort By Name And Points
+//
+//        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(TableOfStudents.getModel());
+//        TableOfStudents.setRowSorter(sorter);
+//        List<RowSorter.SortKey> sortKeyList = new ArrayList<>(25);
+//        sortKeyList.add(new RowSorter.SortKey(0,SortOrder.ASCENDING));
+////        sortKeyList.add( new RowSorter.SortKey(4,SortOrder.DESCENDING));
+//        sorter.setSortKeys(sortKeyList);
 
         addStudentButton(TableOfStudents);
         changeInfoAboutStudent(TableOfStudents);
         addPointsToStudents(TableOfStudents);
         removePointsToStudents(TableOfStudents);
         countByTypeOfCondtition(TableOfStudents);
-
-        //Sort By Name And Points
-
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(TableOfStudents.getModel());
-        TableOfStudents.setRowSorter(sorter);
-        List<RowSorter.SortKey> sortKeyList = new ArrayList<>(25);
-        sortKeyList.add(new RowSorter.SortKey(0,SortOrder.ASCENDING));
-//        sortKeyList.add( new RowSorter.SortKey(4,SortOrder.DESCENDING));
-        sorter.setSortKeys(sortKeyList);
+//        searchByPartial(TableOfStudents);
 
     }
     public static void main(String[] args) {
         MainFrame myFrame = new MainFrame();
     }
-
-
 }
-
-
-//        ListSelectionModel modelClass = TableOfClasses.getSelectionModel();
-//        modelClass.addListSelectionListener(new ListSelectionListener() {
-//            @Override
-//            public void valueChanged(ListSelectionEvent e) {
-//                if( !modelClass.isSelectionEmpty()){
-//                    // Get selected row
-//                    int indexSelectedClass = modelClass.getMinSelectionIndex();
-//                    JOptionPane.showMessageDialog(null,"This is class number" + indexSelectedClass);
-//                }
-//            }
-//        });
