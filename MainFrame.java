@@ -234,10 +234,14 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                                 int howPoints = Integer.parseInt(howManyRemove.getText());
                                 int allPoints = points - howPoints;
                                 DefaultTableModel modelTableToRemove = (DefaultTableModel) TableOfStudents.getModel();
-                                modelTableToRemove.setValueAt(allPoints,TableOfStudents.getSelectedRow(),4);
-                                JOptionPane.showMessageDialog(null,"Points were removed ");
-                                howManyRemove.setText("");
+                                if(allPoints<=0){
+                                    modelTableToRemove.removeRow(TableOfStudents.getSelectedRow());
+                                }else {
+                                    modelTableToRemove.setValueAt(allPoints, TableOfStudents.getSelectedRow(), 4);
+                                    JOptionPane.showMessageDialog(null, "Points were removed ");
+                                    howManyRemove.setText("");
 //                                modelTableToRemove.fireTableDataChanged();
+                                }
                                 TableOfStudents.repaint();
                                 PanelRemovePoints.setVisible(false);
                             }
