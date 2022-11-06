@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.event.*;
 import java.util.regex.PatternSyntaxException;
@@ -43,6 +42,12 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
     private JLabel ResultOfCountigByType;
     private JPanel PanelOfCountingCondition;
     private JButton searchButtonByName;
+    private JButton addGroupButton;
+    private JButton removeGroupButton;
+    private JPanel PanelToGroup;
+    private JTextField fieldToNameGroup;
+    private JTextField fieldToSizeGroup;
+    private JButton btnToUpdateGroups;
 
 
     public MainFrame(){
@@ -51,6 +56,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         PanelToAddPoints.setVisible(false);
         PanelRemovePoints.setVisible(false);
         PanelOfCountingCondition.setVisible(false);
+        PanelToGroup.setVisible(false);
 
         createClassesTable();
 //        createStudentsTablev2();
@@ -81,7 +87,52 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                 }
             });
     }
-
+    public void addGroup( JTable TableOfClasses){
+        addGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                PanelToGroup.setVisible(true);
+                btnToUpdateGroups.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        if(fieldToNameGroup.getText().equals("") || fieldToNameGroup.getText().equals("")){
+//                            JOptionPane.showMessageDialog(null,"You have to full all fields!");
+                        }else if(!fieldToNameGroup.getText().equals("") && !fieldToSizeGroup.getText().equals("")){
+                            String nameField = fieldToNameGroup.getText();
+                            String sizeField = fieldToSizeGroup.getText();
+                            DefaultTableModel tableModel = (DefaultTableModel) TableOfClasses.getModel();
+                            String[] newRow = {nameField, sizeField};
+                            tableModel.addRow(newRow);
+                            fieldToNameGroup.setText("");
+                            fieldToSizeGroup.setText("");
+                            TableOfClasses.repaint();
+                        }
+                    }
+                });
+                TableOfClasses.addComponentListener(new ComponentAdapter() {
+                    @Override
+                    public void componentResized(ComponentEvent e) {
+                        super.componentResized(e);
+                        PanelToGroup.setVisible(false);
+                    }
+                });
+            }
+        });
+    }
+//    public void removeGroup(JTable TableOfGroups){
+//        removeGroupButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                DefaultTableModel tableModel = (DefaultTableModel) TableOfGroups.getModel();
+//                if(TableOfGroups.getSelectedRow()!=-1){
+//                    tableModel.removeRow(TableOfGroups.getSelectedRow());
+//                }else if(TableOfGroups.getSelectedRow()==0){
+//                    JOptionPane.showMessageDialog(null,"There is no more groups to remove");
+//                }
+//                TableOfGroups.repaint();
+//            }
+//        });
+//    }
     public void removeStudent(JTable TableOfStudents){
 
         removeStudentButton.addActionListener(new ActionListener() {
@@ -93,12 +144,12 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                 if(TableOfStudents.getSelectedRow()!=-1){
                     ifDelate=true;
                     tableModel.removeRow(TableOfStudents.getSelectedRow());
-
+                    TableOfStudents.repaint();
                 }else if(TableOfStudents.getRowCount()==0) {
                     JOptionPane.showMessageDialog(null,"There is no more student to remove");
                 }
 //                tableModel.fireTableDataChanged();
-                TableOfStudents.repaint();
+
             }
         });
 
@@ -334,6 +385,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             removeStudent(TableOfStudents);
             searchByPartial(TableOfStudents,modelStudent);
 
+
         } else if (whichClass=="Klasa 2B") {
             Object[][]date1={
                     {"Aneta","Makowska",StudentCondition.CHORY, "04:04:1998",1600},
@@ -343,6 +395,8 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             TableOfStudents.setModel(modelStudent);
             removeStudent(TableOfStudents);
             searchByPartial(TableOfStudents,modelStudent);
+
+
         }
         //Sort By Name And Points
 //
@@ -358,10 +412,13 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         addPointsToStudents(TableOfStudents);
         removePointsToStudents(TableOfStudents);
         countByTypeOfCondtition(TableOfStudents);
+        addGroup(TableOfClasses);
+//        removeGroup(TableOfClasses);
 //        searchByPartial(TableOfStudents);
 
     }
     public static void main(String[] args) {
         MainFrame myFrame = new MainFrame();
     }
+
 }
