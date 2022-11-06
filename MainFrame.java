@@ -63,7 +63,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         listenerCLickOnClassTable();
         setContentPane(MainPanel);
         setTitle("school-journal-simulator");
-        setSize(500,700);
+        setSize(600,800);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         setVisible(true);
@@ -107,12 +107,6 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
                             fieldToSizeGroup.setText("");
                             TableOfClasses.repaint();
                         }
-                    }
-                });
-                TableOfClasses.addComponentListener(new ComponentAdapter() {
-                    @Override
-                    public void componentResized(ComponentEvent e) {
-                        super.componentResized(e);
                         PanelToGroup.setVisible(false);
                     }
                 });
