@@ -113,20 +113,20 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             }
         });
     }
-//    public void removeGroup(JTable TableOfGroups){
-//        removeGroupButton.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                DefaultTableModel tableModel = (DefaultTableModel) TableOfGroups.getModel();
-//                if(TableOfGroups.getSelectedRow()!=-1){
-//                    tableModel.removeRow(TableOfGroups.getSelectedRow());
-//                }else if(TableOfGroups.getSelectedRow()==0){
-//                    JOptionPane.showMessageDialog(null,"There is no more groups to remove");
-//                }
-//                TableOfGroups.repaint();
-//            }
-//        });
-//    }
+    public void removeGroup(JTable TableOfGroups){
+        removeGroupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                DefaultTableModel tableModel = (DefaultTableModel) TableOfGroups.getModel();
+                if(TableOfGroups.getSelectedRow()!=-1){
+                    tableModel.removeRow(TableOfGroups.getSelectedRow());
+                }else if(TableOfGroups.getSelectedRow()==0){
+                    JOptionPane.showMessageDialog(null,"There is no more groups to remove");
+                }
+                TableOfGroups.repaint();
+            }
+        });
+    }
     public void removeStudent(JTable TableOfStudents){
 
         removeStudentButton.addActionListener(new ActionListener() {
@@ -407,7 +407,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
         removePointsToStudents(TableOfStudents);
         countByTypeOfCondtition(TableOfStudents);
         addGroup(TableOfClasses);
-//        removeGroup(TableOfClasses);
+        removeGroup(TableOfClasses);
 //        searchByPartial(TableOfStudents);
 
     }
