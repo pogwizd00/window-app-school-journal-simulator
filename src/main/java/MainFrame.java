@@ -169,7 +169,6 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
             }
         });
     }
-
     public void addGroup( JTable TableOfClasses){
         addGroupButton.addActionListener(new ActionListener() {
             @Override
@@ -613,7 +612,7 @@ public class MainFrame extends JFrame { // when you extens from Jframe you can u
 //       sorter = new TableRowSorter<DefaultTableModel>(tableModel);
 
     }
-    public static void main(String ... args) {
+    public static void main(String [] args) {
         MainFrame myFrame = new MainFrame();
     }
 }
