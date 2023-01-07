@@ -1,5 +1,5 @@
 ## window-app-school-journal-simulator
-##Desciption
+
 It's simply window application which use Swing to GUI and hibernate to cooperate with database.
 Maven was also used to take into account the dependencies.
 The database used in the project is MySQL.
